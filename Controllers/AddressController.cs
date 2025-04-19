@@ -18,8 +18,10 @@ namespace Farmify_Api.Controllers
             _context = context;
         }
 
+        
+
         [HttpPost("Add-Address")]
-        public async Task<ActionResult<AddressResponse>> addAddress([FromBody] AddressRequest request)
+        public async Task<ActionResult<AddressResponse>> addAddress([FromBody] AddressRequest request, Boolean primary)
         {
             try
             {
@@ -48,6 +50,9 @@ namespace Farmify_Api.Controllers
                     Province = request.Province,
                     Zipcode = request.Zipcode
                 };
+
+                _context.Addresses.Add(address);
+                await _context.SaveChangesAsync();
 
                 var response = new AddressResponse
                 {
