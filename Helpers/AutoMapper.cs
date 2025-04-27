@@ -7,9 +7,12 @@ namespace Farmify_Api.Helpers
     {
         public AutoMapper()
         {
+
+
             CreateMap<UserRequest, User>();
             CreateMap<User, UserResponse>();
             CreateMap<User, UserDetail>();
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Farmify_Api.Models;
+﻿using AutoMapper;
+using Farmify_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,48 +10,30 @@ namespace Farmify_Api.Controllers
     public class RoleController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public RoleController(AppDbContext context)
+        private readonly IMapper _mapper;
+        public RoleController(AppDbContext context, IMapper mapper)
         {
-            _context = context;   
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("All-Roles")]
-        public async Task<ActionResult<Paginate<RoleResponse>>> getRoles([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? searchTerm = null)
+        public async Task<ActionResult<List<RoleResponse>>> getRoles()
         {
             try
             {
-                var query = _context.Roles
+                var roles = await _context.Roles
                     .AsNoTracking()
                     .Where(r => r.Deleted == false)
                     .OrderBy(r => r.Id)
-                    .AsQueryable();
-
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    query = query.Where(r => r.RoleName == searchTerm);
-                }
-
-                var totalCount = await query.CountAsync();
-
-                var roles = await query
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
                     .ToListAsync();
 
-                var roleDetail = roles.Select(r => new RoleResponse
+                var response = roles.Select(d => new RoleResponse
                 {
-                    Id = r.Id,
-                    RoleName = r.RoleName,
-                    Deleted = r.Deleted
-                });
-
-                var response = new Paginate<RoleResponse>
-                {
-                    Items = roleDetail,
-                    TotalCount = totalCount,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                };
+                    Id = d.Id,
+                    RoleName = d.RoleName,
+                    Deleted = d.Deleted
+                }).ToList();
 
                 return response;
             }catch(Exception ex)

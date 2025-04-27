@@ -33,7 +33,7 @@ namespace Farmify_Api.Controllers
             {
                 var query = _context.Users
                     .AsNoTracking()
-                    .OrderBy(d => d.Id)
+                    .OrderByDescending(d => d.Id)
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(searchTerm))
