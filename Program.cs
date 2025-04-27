@@ -15,10 +15,11 @@ builder.Services.AddCors(o =>
         .AllowAnyMethod()
         );
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+var app = builder.Build();  
 
 if (app.Environment.IsDevelopment())
 {

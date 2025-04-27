@@ -1,4 +1,5 @@
-﻿using Farmify_Api.Helpers;
+﻿using AutoMapper;
+using Farmify_Api.Helpers;
 using Farmify_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace Farmify_Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public UserController(AppDbContext context, IConfiguration configuration)
+        public UserController(AppDbContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         [HttpGet("All-Users")]
@@ -50,16 +53,7 @@ namespace Farmify_Api.Controllers
                     return NotFound("No users found!");
                 }
 
-                var userDetails = users.Select(u => new UserResponse
-                {
-                    Id = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Username = u.Username,
-                    Password = u.Password,
-                    Email = u.Email,
-                    Role = u.Role
-                });
+                var userDetails = _mapper.Map<List<UserResponse>>(users);
 
                 var response = new Paginate<UserResponse>
                 {
@@ -88,16 +82,7 @@ namespace Farmify_Api.Controllers
                     return NotFound($"User with id {id} not found!");
                 }
 
-                var response = new UserResponse
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Username = user.Username,
-                    Password = user.Password,
-                    Email = user.Email,
-                    Role = user.Role
-                };
+                var response = _mapper.Map<UserResponse>(user);
                 return response;
             }catch(Exception ex)
             {
@@ -126,14 +111,7 @@ namespace Farmify_Api.Controllers
                     return NotFound("User not found!");
                 }
 
-                var response = new UserDetail
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Roles = user.Role
-                };
+                var response = _mapper.Map<UserDetail>(user);
 
                 return response;
             }catch(Exception ex)
