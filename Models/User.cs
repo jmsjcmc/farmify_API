@@ -21,7 +21,7 @@
         public string LastName { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public string Roles { get; set; }
+        public string Role { get; set; }
     }
 
     public class UserResponse
@@ -53,7 +53,7 @@
 
     public class UserLoginResponse
     {
-        public string AccessToken { get; set; }
+        public string accessToken { get; set; }
         public int Userid { get; set; }
         public string Username { get; set; }
         public string Role { get; set; }

@@ -139,7 +139,7 @@ namespace Farmify_Api.Controllers
 
                 var response = new UserLoginResponse
                 {
-                    AccessToken = accessToken,
+                    accessToken = accessToken,
                     Userid = user.Id,
                     Username = user.Username,
                     Role = user.Role

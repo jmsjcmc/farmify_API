@@ -13,6 +13,7 @@ namespace Farmify_Api.Helpers
             CreateMap<User, UserResponse>();
             CreateMap<User, UserDetail>();
 
+
         }
     }
 }
