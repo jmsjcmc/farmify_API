@@ -1,76 +1,83 @@
-﻿using Farmify_Api.Helpers;
-using Farmify_Api.Models;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Farmify_Api.Helpers;
+using Farmify_Api.Models.Address;
+using Farmify_Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Farmify_Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AddressController : ControllerBase
+    public class AddressController : BaseApiController
     {
-        private readonly AppDbContext _context;
-
-        public AddressController(AppDbContext context)
+        private readonly AddressService _service;
+        public AddressController(AppDbContext context, IMapper mapper, AddressService service) : base (context, mapper)
         {
-            _context = context;
+            _service = service;
         }
-
-        
-
-        [HttpPost("Add-Address")]
-        public async Task<ActionResult<AddressResponse>> addAddress([FromBody] AddressRequest request, Boolean primary)
+        //
+        [HttpGet("islands")]
+        public async Task<ActionResult<List<IslandResponse>>> islandlist()
         {
             try
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User unauthorized!");
-                }
-
-                int id = int.Parse(userIdClaim.Value);
-                var user = await _context.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Id == id);
-                
-                if (user == null)
-                {
-                    return NotFound("User not found!");
-                }
-                var address = new Address
-                {
-                    Userid = user.Id,
-                    HomeAddress = request.HomeAddress,
-                    Street = request.Street,
-                    Baranggay = request.Baranggay,
-                    City = request.City,
-                    Province = request.Province,
-                    Zipcode = request.Zipcode
-                };
-
-                _context.Addresses.Add(address);
-                await _context.SaveChangesAsync();
-
-                var response = new AddressResponse
-                {
-                    Id = address.Id,
-                    Userid = address.Userid,
-                    HomeAddress = address.HomeAddress,
-                    Street = address.Street,
-                    Baranggay = address.Baranggay,
-                    City = address.City,
-                    Province = address.Province,
-                    Zipcode = address.Zipcode,
-                    Primary = address.Primary
-                };
+                var response = await _service.allislands();
                 return response;
-            }catch(Exception ex)
+            } catch (Exception e)
             {
-                return StatusCode(500, ex.InnerException?.Message ?? ex.Message);
+                return handleexception(e);
             }
         }
+        //
+        [HttpGet("island/{id}")]
+        public async Task<ActionResult<IslandResponse>> getisland(int id)
+        {
+            try
+            {
+                var response = await _service.getisland(id);
+                return response;
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
+        //
+        [HttpPost("island")]
+        public async Task<ActionResult<IslandResponse>> createisland([FromBody] IslandRequest request)
+        {
+            try
+            {
+                var response = await _service.createisland(request);
+                return response;
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
+        //
+        [HttpPatch("island/update/{id}")]
+        public async Task<ActionResult<IslandResponse>> updateisland([FromBody] IslandRequest request, int id)
+        {
+            try
+            {
+                var response = await _service.updateisland(request, id);
+                return response;
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
+        //
+        [HttpDelete("island/delete/{id}")]
+        public async Task<ActionResult> deleteisland(int id)
+        {
+            try
+            {
+                await _service.deleteisland(id);
+                return Ok("Success.");
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
+        //
     }
 }
