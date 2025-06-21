@@ -39,7 +39,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    public class BarangaRequest
+    public class BarangayRequest
     {
         public string Name { get; set; }
     }

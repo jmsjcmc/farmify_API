@@ -50,6 +50,13 @@ namespace Farmify_Api.Helpers.Queries
                 .Include(r => r.Province)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
+        // Query for fetching specific region for PUT/PATCH/DELETE methods
+        public async Task<Region?> patchmethodregionid(int id)
+        {
+            return await _context.Regions
+                .Include(r => r.Province)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
         // Query for fetching all province in list
         public async Task<List<Province>> provincelist()
         {
@@ -57,6 +64,21 @@ namespace Farmify_Api.Helpers.Queries
                 .AsNoTracking()
                 .OrderByDescending(p => p.Id)
                 .ToListAsync();
+        }
+        // Query for fetching specific province for GET method
+        public async Task<Province?> getmethodprovinceid(int id)
+        {
+            return await _context.Provinces
+                .AsNoTracking()
+                .Include(p => p.CityMunicipality)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+        // Query for fetching specific province for PUT/PATCH/DELETE methods
+        public async Task<Province?> patchmethodprovinceid(int id)
+        {
+            return await _context.Provinces
+                .Include(p => p.CityMunicipality)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
         // Query for fetching all city municipality in list
         public async Task<List<CityMunicipality>> citymunicipalitylist()
@@ -66,6 +88,21 @@ namespace Farmify_Api.Helpers.Queries
                 .OrderByDescending(c => c.Id)
                 .ToListAsync();
         }
+        // Query for fetching specific city/ municipality for GET method
+        public async Task<CityMunicipality?> getmethodcitymunicipalityid(int id)
+        {
+            return await _context.CityMunicipalities
+                .AsNoTracking()
+                .Include(c => c.Barangay)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+        // Query for fetching specific city/ municipality for PUT/PATCH/DELETE methods
+        public async Task<CityMunicipality?> patchmethodcitymunicipalityid(int id)
+        {
+            return await _context.CityMunicipalities
+                .Include(c => c.Barangay)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
         // Query for fetching all barangay in list
         public async Task<List<Barangay>> barangaylist()
         {
@@ -74,6 +111,20 @@ namespace Farmify_Api.Helpers.Queries
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
         }
-        
+        // Query for fetching specific barangay for GET method
+        public async Task<Barangay?> getmethodbarangayid(int id)
+        {
+            return await _context.Barangays
+                .AsNoTracking()
+                .OrderByDescending(b => b.Id)
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
+        // Query for fetching specific barangay for PUT/PATCH/DELETE methods
+        public async Task<Barangay?> patchmethodbarangayid(int id)
+        {
+            return await _context.Barangays
+                .OrderByDescending(b => b.Id)
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
     }
 }
