@@ -4,6 +4,7 @@ using Farmify_Api.Helpers.Queries;
 using Farmify_Api.Interfaces;
 using Farmify_Api.Models;
 using Farmify_Api.Models.User;
+using Farmify_Api.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace Farmify_Api.Services
@@ -13,11 +14,15 @@ namespace Farmify_Api.Services
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserQueries _query;
-        public UserService(AppDbContext context, IMapper mapper, UserQueries query)
+        private readonly AuthenticationHelper _authHelper;
+        private readonly UserValidator _validator;
+        public UserService(AppDbContext context, IMapper mapper, UserQueries query, AuthenticationHelper authHelper, UserValidator validator)
         {
             _context = context;
             _mapper = mapper;
             _query = query;
+            _authHelper = authHelper;
+            _validator = validator;
         }
         // [HttpGet("users")]
         public async Task<Pagination<UserResponse>> paginatedusers(
@@ -42,7 +47,27 @@ namespace Farmify_Api.Services
         //
         public async Task<UserResponse> getuserdetail(int id)
         {
+           
+        }
+        //
+        public async Task<object> login(string username, string password)
+        {
+            var user = await _context.Users
+                .SingleOrDefaultAsync(u => u.Username == username);
 
+            var accesstoken = _authHelper.generateaccesstoken(user);
+
+            await _context.SaveChangesAsync();
+
+            return new
+            {
+                AccessToken = accesstoken,
+                User = new
+                {
+                    user.Id,
+                    user.Username
+                }
+            };
         }
         // [HttpPost("user")]
         public async Task<UserResponse> createuser(UserRequest request)
