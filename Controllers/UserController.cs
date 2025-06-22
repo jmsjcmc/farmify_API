@@ -44,6 +44,32 @@ namespace Farmify_Api.Controllers
                 return handleexception(e);
             }
         }
+        // Fetch details for authenticated user
+        [HttpGet("user-detail")]
+        public async Task<ActionResult<UserResponse>> getuserdetail()
+        {
+            try
+            {
+                var response = await _service.getuserdetail(User);
+                return response;
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
+        // User login
+        [HttpPost("login")]
+        public async Task<ActionResult> login(string username, string password)
+        {
+            try
+            {
+                var response = await _service.login(username, password);
+                return Ok(response);
+            } catch (Exception e)
+            {
+                return handleexception(e);
+            }
+        }
         // Create user
         [HttpPost("user")]
         public async Task<ActionResult<UserResponse>> createuser([FromBody] UserRequest request)

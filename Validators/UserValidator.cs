@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Farmify_Api.Validators
 {
@@ -18,6 +19,23 @@ namespace Farmify_Api.Validators
             {
                 throw new ArgumentException("Not authenticated.");
             }
+        }
+
+        public static int ValidateUserClaim(ClaimsPrincipal user)
+        {
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("User ID claim not found.");
+            }
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                throw new UnauthorizedAccessException("Invalid user ID claim.");
+            }
+
+            return userId;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Farmify_Api
         {
             // User Mapping
             CreateMap<UserRequest, User>()
+                .ForMember(d => d.Password, o => o.Ignore())
                 .ForMember(d => d.Dateupdated, o => o.Ignore())
                 .ForMember(d => d.Datecreated, o => o.Ignore());
 

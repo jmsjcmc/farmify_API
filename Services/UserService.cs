@@ -6,6 +6,7 @@ using Farmify_Api.Models;
 using Farmify_Api.Models.User;
 using Farmify_Api.Validators;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Farmify_Api.Services
 {
@@ -15,14 +16,12 @@ namespace Farmify_Api.Services
         private readonly IMapper _mapper;
         private readonly UserQueries _query;
         private readonly AuthenticationHelper _authHelper;
-        private readonly UserValidator _validator;
-        public UserService(AppDbContext context, IMapper mapper, UserQueries query, AuthenticationHelper authHelper, UserValidator validator)
+        public UserService(AppDbContext context, IMapper mapper, UserQueries query, AuthenticationHelper authHelper)
         {
             _context = context;
             _mapper = mapper;
             _query = query;
             _authHelper = authHelper;
-            _validator = validator;
         }
         // [HttpGet("users")]
         public async Task<Pagination<UserResponse>> paginatedusers(
@@ -44,12 +43,15 @@ namespace Farmify_Api.Services
             var user = await _query.getmethoduserid(id);
             return _mapper.Map<UserResponse>(user);
         }
-        //
-        public async Task<UserResponse> getuserdetail(int id)
+        // [HttpGet("user-detail")]
+        public async Task<UserResponse> getuserdetail(ClaimsPrincipal detail)
         {
-           
+            int userId = UserValidator.ValidateUserClaim(detail);
+            var user = await _query.getmethoduserid(userId);
+
+            return _mapper.Map<UserResponse>(user);
         }
-        //
+        // [HttpPost("login")]
         public async Task<object> login(string username, string password)
         {
             var user = await _context.Users
@@ -73,6 +75,7 @@ namespace Farmify_Api.Services
         public async Task<UserResponse> createuser(UserRequest request)
         {
             var user = _mapper.Map<User>(request);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             user.Datecreated = TimeHelper.getphilippinestandardtime();
 
             _context.Users.Add(user);
@@ -87,6 +90,8 @@ namespace Farmify_Api.Services
             var user = await _query.patchmethoduserid(id);
 
             _mapper.Map(request, user);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            user.Dateupdated = TimeHelper.getphilippinestandardtime();
 
             await _context.SaveChangesAsync();
 

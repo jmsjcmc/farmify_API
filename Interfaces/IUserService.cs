@@ -1,5 +1,6 @@
 ﻿using Farmify_Api.Models;
 using Farmify_Api.Models.User;
+using System.Security.Claims;
 
 namespace Farmify_Api.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Farmify_Api.Interfaces
             int pageSize = 10,
             string? searchTerm = null);
         Task<UserResponse> getuser(int id);
-        Task<UserResponse> getuserdetail(int id);
+        Task<UserResponse> getuserdetail(ClaimsPrincipal detail);
         Task<object> login(string username, string password);
         Task<UserResponse> createuser(UserRequest request);
         Task<UserResponse> updateuser(UserRequest request, int id);

@@ -1,4 +1,5 @@
-﻿using Farmify_Api.Helpers.Queries;
+﻿using Farmify_Api.Helpers;
+using Farmify_Api.Helpers.Queries;
 using Farmify_Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,8 @@ namespace Farmify_Api.Extensions
     {
         public static IServiceCollection ScopeService(this IServiceCollection service)
         {
+            // Helpers
+            service.AddScoped<AuthenticationHelper>();
             // Services
             service.AddScoped<AddressService>();
             service.AddScoped<UserService>();
