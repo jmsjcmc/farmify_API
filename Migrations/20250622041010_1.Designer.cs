@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmify_Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250621035610_2")]
-    partial class _2
+    [Migration("20250622041010_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
