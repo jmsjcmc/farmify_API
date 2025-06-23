@@ -3,7 +3,6 @@ using Farmify_Api.Helpers;
 using Farmify_Api.Helpers.Queries;
 using Farmify_Api.Interfaces;
 using Farmify_Api.Models;
-using Farmify_Api.Models.User;
 using Farmify_Api.Validators;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;

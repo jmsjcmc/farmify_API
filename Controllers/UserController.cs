@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Farmify_Api.Helpers;
 using Farmify_Api.Models;
-using Farmify_Api.Models.User;
 using Farmify_Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

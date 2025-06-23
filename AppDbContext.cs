@@ -1,6 +1,5 @@
 ﻿
-using Farmify_Api.Models.Address;
-using Farmify_Api.Models.User;
+using Farmify_Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Farmify_Api
@@ -9,41 +8,22 @@ namespace Farmify_Api
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
-        public DbSet<Island> Islands { get; set; }
-        public DbSet<Region> Regions { get; set; }
-        public DbSet<Province> Provinces { get; set; }
-        public DbSet<CityMunicipality> CityMunicipalities { get; set; }
-        public DbSet<Barangay> Barangays { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Farm> Farms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Region>(d =>
-            {
-                d.HasOne(r => r.Island)
-                .WithMany(r => r.Region)
-                .HasForeignKey(r => r.Islandid);
-            });
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Role)
+                .WithMany(u => u.User)
+                .UsingEntity(j => j.ToTable("UserRoles"));
 
-            modelBuilder.Entity<Province>(d =>
+            modelBuilder.Entity<Farm>(d =>
             {
-                d.HasOne(p => p.Region)
-                .WithMany(p => p.Province)
-                .HasForeignKey(p => p.Regionid);
-            });
-
-            modelBuilder.Entity<CityMunicipality>(d =>
-            {
-                d.HasOne(c => c.Province)
-                .WithMany(c => c.CityMunicipality)
-                .HasForeignKey(c => c.Provinceid);
-            });
-
-            modelBuilder.Entity<Barangay>(d =>
-            {
-                d.HasOne(b => b.CityMunicipality)
-                .WithMany(b => b.Barangay)
-                .HasForeignKey(b => b.CityMunicipalityid);
+                d.HasOne(f => f.User)
+                .WithOne(f => f.Farm)
+                .HasForeignKey<Farm>(f => f.Userid);
             });
         }
     }

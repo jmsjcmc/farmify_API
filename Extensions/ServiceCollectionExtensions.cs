@@ -15,10 +15,8 @@ namespace Farmify_Api.Extensions
             // Helpers
             service.AddScoped<AuthenticationHelper>();
             // Services
-            service.AddScoped<AddressService>();
             service.AddScoped<UserService>();
             // Queries
-            service.AddScoped<AddressQueries>();
             service.AddScoped<UserQueries>();
             return service;
         }

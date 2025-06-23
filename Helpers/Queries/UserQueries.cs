@@ -1,4 +1,4 @@
-﻿using Farmify_Api.Models.User;
+﻿using Farmify_Api.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 

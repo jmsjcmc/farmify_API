@@ -1,5 +1,4 @@
 ﻿using Farmify_Api.Models;
-using Farmify_Api.Models.User;
 using System.Security.Claims;
 
 namespace Farmify_Api.Interfaces

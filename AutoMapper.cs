@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Farmify_Api.Models.Address;
-using Farmify_Api.Models.User;
+using Farmify_Api.Models;
 
 namespace Farmify_Api
 {
@@ -15,26 +14,16 @@ namespace Farmify_Api
                 .ForMember(d => d.Datecreated, o => o.Ignore());
 
             CreateMap<User, UserResponse>();
-            // Island Mapping
-            CreateMap<IslandRequest, Island>();
+            // Role Mapping 
+            CreateMap<RoleRequest, Role>();
 
-            CreateMap<Island, IslandResponse>();
-            // Region Mapping
-            CreateMap<RegionRequest, Region>();
+            CreateMap<Role, RoleResponse>();
+            // Farm Mapping
+            CreateMap<FarmRequest, Farm>()
+                .ForMember(d => d.Removed, o => o.Ignore());
 
-            CreateMap<Region, RegionResponse>();
-            // Province Mapping
-            CreateMap<ProvinceRequest, Province>();
-
-            CreateMap<Province, ProvinceResponse>();
-            // City Municipality Mapping
-            CreateMap<CityMunicipalityRequest, CityMunicipality>();
-
-            CreateMap<CityMunicipality, CityMunicipalityResponse>();
-            // Barangay Mapping
-            CreateMap<BarangayRequest, Barangay>();
-
-            CreateMap<Barangay, BarangayResponse>();
+            CreateMap<Farm, FarmResponse>()
+                .ForMember(d => d.User, o => o.MapFrom(s => s.User));
         }
     }
 }

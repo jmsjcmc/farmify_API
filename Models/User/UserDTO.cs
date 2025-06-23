@@ -1,4 +1,4 @@
-﻿namespace Farmify_Api.Models.User
+﻿namespace Farmify_Api.Models
 {
     public class UserRequest
     {

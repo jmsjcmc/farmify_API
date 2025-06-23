@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Helpers\Excel\" />
+    <Folder Include="Models\Product\" />
   </ItemGroup>
 
 </Project>

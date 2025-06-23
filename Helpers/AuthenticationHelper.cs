@@ -1,4 +1,4 @@
-﻿using Farmify_Api.Models.User;
+﻿using Farmify_Api.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
