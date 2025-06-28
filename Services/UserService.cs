@@ -9,16 +9,12 @@ using System.Security.Claims;
 
 namespace Farmify_Api.Services
 {
-    public class UserService : IUserService
+    public class UserService : BaseService, IUserService
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
         private readonly UserQueries _query;
         private readonly AuthenticationHelper _authHelper;
-        public UserService(AppDbContext context, IMapper mapper, UserQueries query, AuthenticationHelper authHelper)
+        public UserService(AppDbContext context, IMapper mapper, UserQueries query, AuthenticationHelper authHelper) : base (context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
             _query = query;
             _authHelper = authHelper;
         }

@@ -7,15 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Farmify_Api.Services
 {
-    public class FarmService : IFarmService
+    public class FarmService : BaseService, IFarmService
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
         private readonly FarmQueries _query;
-        public FarmService(AppDbContext context,IMapper mapper, FarmQueries query)
+        public FarmService(AppDbContext context,IMapper mapper, FarmQueries query) : base (context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
             _query = query;
         }
         // [HttpGet("farms")]

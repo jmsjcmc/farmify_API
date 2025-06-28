@@ -16,8 +16,12 @@ namespace Farmify_Api.Extensions
             service.AddScoped<AuthenticationHelper>();
             // Services
             service.AddScoped<UserService>();
+            service.AddScoped<FarmService>();
+            service.AddScoped<CategoryService>();
             // Queries
             service.AddScoped<UserQueries>();
+            service.AddScoped<FarmQueries>();
+            service.AddScoped<CategoryQueries>();
             return service;
         }
         // Swagger Documentation

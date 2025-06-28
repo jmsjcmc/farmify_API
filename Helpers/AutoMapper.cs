@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Farmify_Api.Models;
 
-namespace Farmify_Api
+namespace Farmify_Api.Helpers
 {
     public class AutoMapper : Profile
     {
@@ -24,6 +24,15 @@ namespace Farmify_Api
 
             CreateMap<Farm, FarmResponse>()
                 .ForMember(d => d.User, o => o.MapFrom(s => s.User));
+            // Category Mapping
+            CreateMap<CategoryRequest, Category>();
+
+            CreateMap<Category, CategoryResponse>();
+            // Product Mapping
+            CreateMap<ProductRequest, Product>();
+
+            CreateMap<Product, ProductResponse>()
+                .ForMember(d => d.Category, o => o.MapFrom(s => s.Category));
         }
     }
 }

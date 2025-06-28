@@ -10,6 +10,8 @@ namespace Farmify_Api
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Farm> Farms { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -24,6 +26,13 @@ namespace Farmify_Api
                 d.HasOne(f => f.User)
                 .WithOne(f => f.Farm)
                 .HasForeignKey<Farm>(f => f.Userid);
+            });
+
+            modelBuilder.Entity<Product>(d =>
+            {
+                d.HasOne(p => p.Category)
+                .WithMany(p => p.Product)
+                .HasForeignKey(p => p.Categoryid);
             });
         }
     }

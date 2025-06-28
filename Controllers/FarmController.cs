@@ -2,7 +2,6 @@
 using Farmify_Api.Helpers;
 using Farmify_Api.Models;
 using Farmify_Api.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Farmify_Api.Controllers
