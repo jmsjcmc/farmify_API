@@ -25,12 +25,7 @@ namespace Farmify_Api.Services
             string? searchTerm = null)
         {
             var query = await _query.paginatedusers(searchTerm);
-            var totalcount = await query.CountAsync();
-
-            var users = await PaginationHelper.paginateandproject<User, UserResponse>(
-                query, pageNumber, pageSize, _mapper);
-
-            return PaginationHelper.paginatedresponse(users, totalcount, pageNumber, pageSize);
+            return await PaginationHelper.paginateandmap<User, UserResponse>(query, pageNumber, pageSize, _mapper);
         }
         // [HttpGet("user/{id}")]
         public async Task<UserResponse> getuser(int id)
@@ -76,13 +71,12 @@ namespace Farmify_Api.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var saveduser = await _query.getmethoduserid(user.Id);
-            return _mapper.Map<UserResponse>(saveduser);
+            return await userResponse(user.Id);
         }
         // [HttpPatch("user/update/{id}")]
         public async Task<UserResponse> updateuser(UserRequest request, int id)
         {
-            var user = await _query.patchmethoduserid(id);
+            var user = await patchuserid(id);
 
             _mapper.Map(request, user);
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -90,29 +84,43 @@ namespace Farmify_Api.Services
 
             await _context.SaveChangesAsync();
 
-            var updateduser = await _query.getmethoduserid(user.Id);
-            return _mapper.Map<UserResponse>(updateduser);
+            return await userResponse(user.Id);
         }
         // [HttpPatch("user/hide/{id}")]
         public async Task<UserResponse> hideuser(int id)
         {
-            var user = await _query.patchmethoduserid(id);
+            var user = await patchuserid(id);
 
             user.Removed = true;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            var updateduser = await _query.getmethoduserid(id);
-            return _mapper.Map<UserResponse>(updateduser);
+            return await userResponse(user.Id);
         }
         // [HttpDelete("user/delete/{id}")]
-        public async Task deleteuser (int id)
+        public async Task<UserResponse> deleteuser (int id)
         {
-            var user = await _query.patchmethoduserid(id);
+            var user = await patchuserid(id);
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+
+            return await userResponse(user.Id);
+        }
+        // Helpers
+        private async Task<User?> patchuserid(int id)
+        {
+            return await _query.patchmethoduserid(id);
+        }
+        private async Task<User?> getuserid(int id)
+        {
+            return await _query.getmethoduserid(id);
+        }
+        private async Task<UserResponse> userResponse(int id)
+        {
+            var response = await getuserid(id);
+            return _mapper.Map<UserResponse>(response);
         }
     }
 }

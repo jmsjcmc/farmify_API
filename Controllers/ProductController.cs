@@ -84,12 +84,12 @@ namespace Farmify_Api.Controllers
         }
         // Delete specific product from database
         [HttpDelete("product/delete/{id}")]
-        public async Task<ActionResult> deleteproduct(int id)
+        public async Task<ActionResult<ProductResponse>> deleteproduct(int id)
         {
             try
             {
-                await _service.deleteproduct(id);
-                return Ok("Success.");
+                var response = await _service.deleteproduct(id);
+                return response;
             } catch (Exception e)
             {
                 return handleexception(e);

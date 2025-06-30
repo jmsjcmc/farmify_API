@@ -21,12 +21,7 @@ namespace Farmify_Api.Services
             string? searchTerm = null)
         {
             var query =  _query.farmquery(searchTerm);
-            var totalcount = await query.CountAsync();
-
-            var farms = await PaginationHelper.paginateandproject<Farm, FarmResponse>(
-                query, pageNumber, pageSize, _mapper);
-
-            return PaginationHelper.paginatedresponse(farms, totalcount, pageNumber, pageSize);
+            return await PaginationHelper.paginateandmap<Farm, FarmResponse>(query, pageNumber, pageSize, _mapper);
         }
         // [HttpGet("farm/{id}")]
         public async Task<FarmResponse> getfarm(int id)
@@ -42,40 +37,53 @@ namespace Farmify_Api.Services
             _context.Farms.Add(farm);
             await _context.SaveChangesAsync();
 
-            var savedfarm = await _query.getmethodfarmid(farm.Id);
-            return _mapper.Map<FarmResponse>(savedfarm);
+            return await farmResponse(farm.Id);
         }
         // [HttpPatch("farm/update/{id}")]
         public async Task<FarmResponse> updatefarm (FarmRequest request, int id)
         {
-            var farm = await _query.patchmethodfarmid(id);
+            var farm = await patchfarmid(id);
 
             _mapper.Map(request, farm);
 
             await _context.SaveChangesAsync();
 
-            var updatedfarm = _query.getmethodfarmid(farm.Id);
-            return _mapper.Map<FarmResponse>(updatedfarm);
+            return await farmResponse(farm.Id);
         }
         // [HttpPatch("farm/hide/{id}")]
         public async Task<FarmResponse> hidefarm (int id)
         {
-            var farm = await _query.patchmethodfarmid(id);
+            var farm = await patchfarmid(id);
 
             farm.Removed = true;
 
             await _context.SaveChangesAsync();
 
-            var updatedfarm = await _query.getmethodfarmid(farm.Id);
-            return _mapper.Map<FarmResponse>(updatedfarm);
+            return await farmResponse(farm.Id);
         }
         // [HttpDelete("farm/delete/{id}")]
-        public async Task deletefarm(int id)
+        public async Task<FarmResponse> deletefarm(int id)
         {
-            var farm = await _query.patchmethodfarmid(id);
+            var farm = await patchfarmid(id);
 
             _context.Farms.Remove(farm);
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
+            
+            return await farmResponse(farm.Id);
+        }
+        // Helpers
+        private async Task<Farm?> patchfarmid(int id)
+        {
+            return await _query.patchmethodfarmid(id);
+        }
+        private async Task<Farm?> getfarmid(int id)
+        {
+            return await _query.getmethodfarmid(id);
+        }
+        private async Task<FarmResponse> farmResponse(int id)
+        {
+            var response = await getfarmid(id);
+            return _mapper.Map<FarmResponse>(response);
         }
     }
 }

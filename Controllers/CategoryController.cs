@@ -67,12 +67,12 @@ namespace Farmify_Api.Controllers
         }
         // Delete specific category in database
         [HttpDelete("category/delete/{id}")]
-        public async Task<ActionResult> deletecategory(int id)
+        public async Task<ActionResult<CategoryResponse>> deletecategory(int id)
         {
             try
             {
-                await _service.deletecategory(id);
-                return Ok("Success.");
+                var response = await _service.deletecategory(id);
+                return response;
             } catch (Exception e)
             {
                 return handleexception(e);

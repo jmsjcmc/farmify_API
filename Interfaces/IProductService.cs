@@ -12,6 +12,6 @@ namespace Farmify_Api.Interfaces
         Task<ProductResponse> createproduct(ProductRequest request);
         Task<ProductResponse> updateproduct(ProductRequest request, int id);
         Task<ProductResponse> hideproduct(int id);
-        Task deleteproduct(int id);
+        Task<ProductResponse> deleteproduct(int id);
     }
 }

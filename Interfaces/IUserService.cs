@@ -15,6 +15,6 @@ namespace Farmify_Api.Interfaces
         Task<UserResponse> createuser(UserRequest request);
         Task<UserResponse> updateuser(UserRequest request, int id);
         Task<UserResponse> hideuser(int id);
-        Task deleteuser(int id);
+        Task<UserResponse> deleteuser(int id);
     }
 }

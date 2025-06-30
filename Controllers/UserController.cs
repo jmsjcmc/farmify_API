@@ -110,12 +110,12 @@ namespace Farmify_Api.Controllers
         }
         // Delete specific user in database
         [HttpDelete("user/delete/{id}")]
-        public async Task<ActionResult> deleteuser(int id)
+        public async Task<ActionResult<UserResponse>> deleteuser(int id)
         {
             try
             {
-                await _service.deleteuser(id);
-                return Ok("Success.");
+                var  response = await _service.deleteuser(id);  
+                return response;
             } catch (Exception e)
             {
                 return handleexception(e);

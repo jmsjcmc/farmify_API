@@ -83,12 +83,12 @@ namespace Farmify_Api.Controllers
         }
         // Delete specific farm in database
         [HttpDelete("farm/delete/{id}")]
-        public async Task<ActionResult> deletefarm(int id)
+        public async Task<ActionResult<FarmResponse>> deletefarm(int id)
         {
             try
             {
-                await _service.deletefarm(id);
-                return Ok("Success.");
+                var response = await _service.deletefarm(id);
+                return response;
             } catch (Exception e)
             {
                 return handleexception(e);

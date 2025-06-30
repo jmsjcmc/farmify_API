@@ -8,6 +8,6 @@ namespace Farmify_Api.Interfaces
         Task<CategoryResponse> getcategory(int id);
         Task<CategoryResponse> createcategory(CategoryRequest request);
         Task<CategoryResponse> updatecategory(CategoryRequest request, int id);
-        Task deletecategory(int id);
+        Task<CategoryResponse> deletecategory(int id);
     }
 }

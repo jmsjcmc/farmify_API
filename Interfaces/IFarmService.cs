@@ -12,6 +12,6 @@ namespace Farmify_Api.Interfaces
         Task<FarmResponse> addfarm(FarmRequest request);
         Task<FarmResponse> updatefarm(FarmRequest request, int id);
         Task<FarmResponse> hidefarm(int id);
-        Task deletefarm(int id);
+        Task<FarmResponse> deletefarm(int id);
     }
 }

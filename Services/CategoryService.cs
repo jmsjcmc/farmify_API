@@ -33,32 +33,42 @@ namespace Farmify_Api.Services
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            var savedCategory = await _query.getmethodcategoryid(category.Id);
-            return _mapper.Map<CategoryResponse>(savedCategory);
+            return await categoryResponse(category.Id);
         }
         // [HttpPatch("category/update/{id}")]
         public async Task<CategoryResponse> updatecategory(CategoryRequest request, int id)
         {
-            var category = await getcategoryid(id);
+            var category = await patchcategoryid(id);
 
             _mapper.Map(request, category);
 
             await _context.SaveChangesAsync();
 
-            var updatedCategory = await _query.getmethodcategoryid(category.Id);
-            return _mapper.Map<CategoryResponse>(updatedCategory);
+            return await categoryResponse(category.Id);
         }
         // [HttpDelete("category/delete/{id}")]
-        public async Task deletecategory(int id)
+        public async Task<CategoryResponse> deletecategory(int id)
         {
-            var category = await getcategoryid(id);
+            var category = await patchcategoryid(id);
 
             _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return await categoryResponse(category.Id);
         }
         // Helper
-        private async Task<Category?> getcategoryid(int id)
+        private async Task<Category?> patchcategoryid(int id)
         {
             return await _query.patchmethodcategoryid(id);
+        }
+        private async Task<Category?> getcategoryid(int id)
+        {
+            return await _query.getmethodcategoryid(id);
+        }
+        private async Task<CategoryResponse> categoryResponse(int id)
+        {
+            var response = await getcategoryid(id);
+            return _mapper.Map<CategoryResponse>(response);
         }
     }
 }

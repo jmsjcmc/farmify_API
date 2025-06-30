@@ -22,7 +22,6 @@ namespace Farmify_Api.Helpers
             };
         }
     }
-
     public abstract class BaseService
     {
         protected readonly AppDbContext _context;

@@ -21,11 +21,7 @@ namespace Farmify_Api.Services
             string? searchTerm = null)
         {
             var query = _query.paginatedproducts(searchTerm);
-            var totalCount = await query.CountAsync();
-
-            var products = await PaginationHelper.paginateandproject<Product, ProductResponse>(
-                query, pageNumber, pageSize, _mapper);
-            return PaginationHelper.paginatedresponse(products, totalCount, pageNumber, pageSize);
+            return await PaginationHelper.paginateandmap<Product, ProductResponse>(query, pageNumber, pageSize, _mapper);
         }
         // [HttpGet("product/{id}")]
         public async Task<ProductResponse> getproduct(int id)
@@ -41,45 +37,53 @@ namespace Farmify_Api.Services
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            var savedProduct = await _query.getmethodproductid(product.Id);
-            return _mapper.Map<ProductResponse>(savedProduct);
+            return await productResponse(product.Id);
         }
         // [HttpPatch("product/update/{id}")]
         public async Task<ProductResponse> updateproduct(ProductRequest request, int id)
         {
-            var product = await getproductid(id);
+            var product = await patchproductid(id);
 
             _mapper.Map(request, product);
             await _context.SaveChangesAsync();
 
-            var updatedProduct = await _query.getmethodproductid(product.Id);
-            return _mapper.Map<ProductResponse>(updatedProduct);
+            return await productResponse(product.Id);
         }
         // [HttpPatch("product/hide/{id}")]
         public async Task<ProductResponse> hideproduct(int id)
         {
-            var product = await getproductid(id);
+            var product = await patchproductid(id);
 
             product.Removed = true;
 
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
 
-            var updatedProduct = await _query.getmethodproductid(product.Id);
-            return _mapper.Map<ProductResponse>(updatedProduct);
+            return await productResponse(product.Id);
         }
         // [HttpDelete("product/delete/{id}")]
-        public async Task deleteproduct(int id)
+        public async Task<ProductResponse> deleteproduct(int id)
         {
-            var product = await getproductid(id);
+            var product = await patchproductid(id);
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+
+            return await productResponse(product.Id);
         }
-        // Helper 
-        private async Task<Product?> getproductid(int id)
+        // Helpers 
+        private async Task<Product?> patchproductid(int id)
         {
             return await _query.patchmethodproductid(id);
+        }
+        private async Task<Product?> getproductid(int id)
+        {
+            return await _query.getmethodproductid(id);
+        }
+        private async Task<ProductResponse> productResponse(int id)
+        {
+            var response = await getproductid(id);
+            return _mapper.Map<ProductResponse>(response);
         }
     }
 }
