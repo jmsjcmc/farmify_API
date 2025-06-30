@@ -13,6 +13,7 @@
         public DateTime Datecreated { get; set; }
         public DateTime? Dateupdated { get; set; }
         public Farm Farm { get; set; }
-
     }
+
+    
 }
